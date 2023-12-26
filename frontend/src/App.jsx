@@ -10,7 +10,6 @@ import Welcome from "./components/Welcome";
 import Login from "./components/Login";
 import Navbar from "./components/Navbar";
 import NewFungus from "./components/NewFungus";
-
 import Register from "./components/Register";
 
 function App() {
