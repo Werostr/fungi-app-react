@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import test from "../services/test";
-import axios from "axios";
 
 export default function Test() {
   const [data, setData] = useState("");

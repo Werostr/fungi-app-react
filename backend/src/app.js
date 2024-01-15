@@ -1,15 +1,26 @@
 var createError = require("http-errors");
+const mongoose = require("mongoose");
 var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var cors = require("cors");
 
-var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/users");
-var testAPIRouter = require("./controllers/testAPI");
+mongoose
+  .connect("mongodb://127.0.0.1:27017/fungi-elysium")
+  .then(() => {
+    console.log("CONNECTED TO MONGODB");
+  })
+  .catch((error) => {
+    console.log("CONNECTION ERROR:", error.message);
+  });
 
-var app = express();
+const fungiRouter = require("./controllers/fungiRouter");
+const reviewsRouter = require("./controllers/reviewsRouter");
+const usersRouter = require("./controllers/usersRouter");
+const testAPIRouter = require("./controllers/testAPI");
+
+const app = express();
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -22,8 +33,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/", indexRouter);
-app.use("/users", usersRouter);
+app.use("/api/fungi", fungiRouter);
+app.use("/api/fungi/:id/reviews", reviewsRouter);
+app.use("/api/users", usersRouter);
 app.use("/testAPI", testAPIRouter);
 
 // catch 404 and forward to error handler
