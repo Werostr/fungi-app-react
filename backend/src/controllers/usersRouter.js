@@ -6,10 +6,10 @@ const bcrypt = require("bcrypt");
 usersRouter.post("/register", async (req, res) => {
   const { email, username, password } = req.body;
   if (!(password && email && username)) {
-    res.status(400).json({ error: "Missing credentials." });
+    return res.status(400).json({ message: "Missing credentials." });
   } else if (password.length < 5 || email.length < 5) {
-    res.status(400).json({
-      error: "Password and email should be at least 5 characters long.",
+    return res.status(400).json({
+      message: "Password and email should be at least 5 characters long.",
     });
   }
 

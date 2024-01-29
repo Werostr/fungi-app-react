@@ -13,7 +13,6 @@ fungiRouter.get("/", async (req, res) => {
 
 fungiRouter.post("/", async (req, res) => {
   try {
-    console.log(req);
     const newFungus = new Fungus({
       variety: req.body.variety,
       poisonous: req.body.poisonous,
@@ -31,6 +30,7 @@ fungiRouter.post("/", async (req, res) => {
 fungiRouter.get("/:id", async (req, res) => {
   try {
     const fungus = await Fungus.findById(req.params.id);
+    console.log(fungus);
     return res.status(200).json(fungus);
   } catch (error) {
     return res.status(500).json({ error: "Error searching fungus." });

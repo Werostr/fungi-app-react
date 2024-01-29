@@ -15,11 +15,26 @@ const opts = { toJSON: { virtuals: true } };
 
 const FungusSchema = new Schema(
   {
-    variety: String,
-    poisonous: Boolean,
-    description: String,
-    city: String,
-    country: String,
+    variety: {
+      type: String,
+      required: true,
+    },
+    poisonous: {
+      type: Boolean,
+      required: true,
+    },
+    description: {
+      type: String,
+      required: true,
+    },
+    city: {
+      type: String,
+      required: true,
+    },
+    country: {
+      type: String,
+      required: true,
+    },
     images: [ImageSchema],
     author: {
       type: Schema.Types.ObjectId,
@@ -34,6 +49,13 @@ const FungusSchema = new Schema(
   },
   opts
 );
+
+FungusSchema.set("toJSON", {
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString();
+    delete returnedObject.__v;
+  },
+});
 
 FungusSchema.post("findOneAndDelete", async function (doc) {
   if (doc) {
