@@ -1,12 +1,14 @@
+import { useNavigate } from "react-router-dom";
 import fungi from "../services/fungi";
 import { useState } from "react";
 
-export default function NewFungus({ addFungus }) {
+export default function NewFungus({ allFungi, addFungus }) {
   const [variety, setVariety] = useState("");
   const [poisonous, setPoisonous] = useState(false);
   const [description, setDescription] = useState("");
   const [city, setCity] = useState("");
   const [country, setCountry] = useState("");
+  const navigate = useNavigate();
 
   const handleAddFungus = async (event) => {
     event.preventDefault();
@@ -26,7 +28,8 @@ export default function NewFungus({ addFungus }) {
       };
 
       const newFungus = await fungi.addNew(data);
-      addFungus(newFungus);
+      addFungus([...allFungi, { ...newFungus }]);
+
       setVariety("");
       setPoisonous(false);
       setDescription("");
@@ -35,6 +38,9 @@ export default function NewFungus({ addFungus }) {
     } catch (error) {
       console.log("Error during creating new fungus", error);
     }
+  };
+  const navigateToAll = () => {
+    navigate(`/fungi`);
   };
 
   return (
@@ -77,6 +83,7 @@ export default function NewFungus({ addFungus }) {
         ></input>
         <button>Add</button>
       </form>
+      <button onClick={navigateToAll}>Back to all</button>
     </>
   );
 }

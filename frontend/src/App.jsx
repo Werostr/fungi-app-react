@@ -1,7 +1,6 @@
 import "./App.css";
 import { useState, useEffect } from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
-import Test from "./components/Test";
 import AllFungi from "./components/AllFungi";
 import NotFound from "./components/NotFound";
 import EditFungus from "./components/EditFungus";
@@ -15,22 +14,6 @@ import fungi from "./services/fungi";
 
 function App() {
   const [allFungi, setAllFungi] = useState([]);
-
-  const addFungus = (item) => {
-    setAllFungi((prevFungi) => [...prevFungi, { ...item }]);
-  };
-
-  const editFungus = (item) => {
-    setAllFungi((prevFungi) =>
-      prevFungi.map((e) => {
-        if (e._id === item._id) {
-          return { ...item };
-        } else {
-          return e;
-        }
-      })
-    );
-  };
 
   useEffect(() => {
     fungi
@@ -47,20 +30,21 @@ function App() {
     <div>
       <Navbar />
       <Routes>
-        <Route path="/test" element={<Test />} />
-
         <Route path="/" element={<Welcome />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/register" element={<RegisterForm />} />
         <Route path="/fungi" element={<AllFungi allFungi={allFungi} />} />
         <Route
           path="/fungi/new"
-          element={<NewFungus addFungus={addFungus} />}
+          element={<NewFungus allFungi={allFungi} addFungus={setAllFungi} />}
         />
-        <Route path="/fungi/:id" element={<Fungus allFungi={allFungi} />} />
+        <Route
+          path="/fungi/:id"
+          element={<Fungus allFungi={allFungi} updateFungus={setAllFungi} />}
+        />
         <Route
           path="/fungi/:id/edit"
-          element={<EditFungus editFungus={editFungus} />}
+          element={<EditFungus allFungi={allFungi} editFungus={setAllFungi} />}
         />
         <Route path="*" element={<NotFound />} />
       </Routes>

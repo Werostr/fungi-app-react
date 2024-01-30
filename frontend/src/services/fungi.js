@@ -12,7 +12,6 @@ const getAll = async () => {
 const getOneById = async (id) => {
   try {
     const res = await axios.get(`http://localhost:9000/api/fungi/${id}`);
-    console.log(res);
     return res.data;
   } catch (err) {
     console.log(err);
@@ -37,4 +36,12 @@ const updateOne = async (data, id) => {
   }
 };
 
-export default { getAll, getOneById, addNew, updateOne };
+const deleteOne = async (id) => {
+  try {
+    await axios.delete(`http://localhost:9000/api/fungi/${id}`);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export default { getAll, getOneById, addNew, updateOne, deleteOne };

@@ -5,7 +5,7 @@ const Fungus = require("../models/fungus");
 
 reviewsRouter.post("/", async (req, res) => {
   try {
-    const fungus = await Fungus.findById(req.params.id);
+    const fungus = await Fungus.findById(req.params.id).populate("reviews");
     const review = new Review({
       comment: req.body.comment,
       rating: req.body.rating,

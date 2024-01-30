@@ -18,7 +18,6 @@ mongoose
 const fungiRouter = require("./controllers/fungiRouter");
 const reviewsRouter = require("./controllers/reviewsRouter");
 const usersRouter = require("./controllers/usersRouter");
-const testAPIRouter = require("./controllers/testAPI");
 
 const app = express();
 
@@ -36,7 +35,6 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/api/fungi", fungiRouter);
 app.use("/api/fungi/:id/reviews", reviewsRouter);
 app.use("/api/users", usersRouter);
-app.use("/testAPI", testAPIRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

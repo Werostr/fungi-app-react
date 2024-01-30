@@ -29,7 +29,7 @@ fungiRouter.post("/", async (req, res) => {
 
 fungiRouter.get("/:id", async (req, res) => {
   try {
-    const fungus = await Fungus.findById(req.params.id);
+    const fungus = await Fungus.findById(req.params.id).populate("reviews");
     console.log(fungus);
     return res.status(200).json(fungus);
   } catch (error) {

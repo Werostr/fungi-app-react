@@ -1,14 +1,15 @@
 import fungi from "../services/fungi";
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-export default function EditFungus({ editFungus }) {
+export default function EditFungus({ allFungi, editFungus }) {
   const id = useParams().id;
   const [variety, setVariety] = useState("");
   const [poisonous, setPoisonous] = useState(null);
   const [description, setDescription] = useState("");
   const [city, setCity] = useState("");
   const [country, setCountry] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     fungi
@@ -34,10 +35,24 @@ export default function EditFungus({ editFungus }) {
         country,
       };
       const editedFungus = await fungi.updateOne(data, id);
-      editFungus(editedFungus);
+      editFungus(
+        allFungi.map((e) => {
+          if (e._id === editedFungus._id) {
+            return { ...editedFungus };
+          } else {
+            return e;
+          }
+        })
+      );
     } catch (error) {
       console.log("Error during creating new fungus", error);
     }
+  };
+  const navigateToAll = () => {
+    navigate(`/fungi`);
+  };
+  const navigateToFungus = () => {
+    navigate(`/fungi/${id}`);
   };
 
   return (
@@ -77,6 +92,8 @@ export default function EditFungus({ editFungus }) {
         ></input>
         <button>Save</button>
       </form>
+      <button onClick={navigateToFungus}>Back</button>
+      <button onClick={navigateToAll}>Back to all</button>
     </>
   );
 }
