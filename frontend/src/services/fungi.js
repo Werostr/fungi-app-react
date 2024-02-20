@@ -20,7 +20,11 @@ const getOneById = async (id) => {
 
 const addNew = async (data) => {
   try {
-    const res = await axios.post(`http://localhost:9000/api/fungi`, data);
+    const res = await axios.post(`http://localhost:9000/api/fungi`, data, {
+      // headers: {
+      //   "Content-Type": "multipart/form-data", // Ustawienie odpowiedniego Content-Type dla FormData
+      // },
+    });
     return res.data;
   } catch (err) {
     console.log(err);

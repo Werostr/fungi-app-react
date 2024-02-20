@@ -5,6 +5,8 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var cors = require("cors");
+//const config = require("../src/utils/config");
+//const cloudinary = require("./utils/cloudinary");
 
 mongoose
   .connect("mongodb://127.0.0.1:27017/fungi-elysium")

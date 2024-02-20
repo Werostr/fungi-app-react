@@ -46,16 +46,20 @@ const FungusSchema = new Schema(
         ref: "Review",
       },
     ],
+    average: {
+      type: Number,
+      default: 0,
+    },
   },
   opts
 );
 
-FungusSchema.set("toJSON", {
-  transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString();
-    delete returnedObject.__v;
-  },
-});
+// FungusSchema.set("toJSON", {
+//   transform: (document, returnedObject) => {
+//     returnedObject.id = returnedObject._id.toString();
+//     delete returnedObject.__v;
+//   },
+// });
 
 FungusSchema.post("findOneAndDelete", async function (doc) {
   if (doc) {

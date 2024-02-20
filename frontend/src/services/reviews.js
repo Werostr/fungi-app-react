@@ -14,9 +14,10 @@ const addNew = async (id, data) => {
 
 const deleteOne = async (id, reviewId) => {
   try {
-    await axios.delete(
+    const res = await axios.delete(
       `http://localhost:9000/api/fungi/${id}/reviews/${reviewId}`
     );
+    return res.data;
   } catch (err) {
     console.log(err);
   }

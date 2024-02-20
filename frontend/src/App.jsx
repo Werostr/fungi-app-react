@@ -11,6 +11,17 @@ import Navbar from "./components/Navbar";
 import NewFungus from "./components/NewFungus";
 import RegisterForm from "./components/RegisterForm";
 import fungi from "./services/fungi";
+import ChatBot from "./components/Chatbot";
+import { createTheme } from "@mui/material/styles";
+import { ThemeProvider } from "@mui/material/styles";
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#000000",
+    },
+  },
+});
 
 function App() {
   const [allFungi, setAllFungi] = useState([]);
@@ -27,28 +38,36 @@ function App() {
   }, []);
 
   return (
-    <div>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Welcome />} />
-        <Route path="/login" element={<LoginForm />} />
-        <Route path="/register" element={<RegisterForm />} />
-        <Route path="/fungi" element={<AllFungi allFungi={allFungi} />} />
-        <Route
-          path="/fungi/new"
-          element={<NewFungus allFungi={allFungi} addFungus={setAllFungi} />}
-        />
-        <Route
-          path="/fungi/:id"
-          element={<Fungus allFungi={allFungi} updateFungus={setAllFungi} />}
-        />
-        <Route
-          path="/fungi/:id/edit"
-          element={<EditFungus allFungi={allFungi} editFungus={setAllFungi} />}
-        />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </div>
+    <ThemeProvider theme={theme}>
+      <div className="App">
+        <Navbar />
+        <ChatBot />
+        <Routes>
+          <Route path="/" element={<Welcome />} />
+          <Route path="/login" element={<LoginForm />} />
+          <Route path="/register" element={<RegisterForm />} />
+          <Route path="/fungi" element={<AllFungi allFungi={allFungi} />} />
+          <Route
+            path="/fungi/new"
+            element={
+              <NewFungus allFungi={allFungi} updateFungi={setAllFungi} />
+            }
+          />
+          <Route
+            path="/fungi/:id"
+            element={<Fungus allFungi={allFungi} updateFungi={setAllFungi} />}
+          />
+          <Route
+            path="/fungi/:id/edit"
+            element={
+              <EditFungus allFungi={allFungi} updateFungi={setAllFungi} />
+            }
+          />
+          <Route path="/not-found" element={<NotFound />} />
+          <Route path="*" element={<Navigate to="/not-found" />} />
+        </Routes>
+      </div>
+    </ThemeProvider>
   );
 }
 
