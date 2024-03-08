@@ -1,6 +1,6 @@
 import "./App.css";
 import { useState, useEffect } from "react";
-import { Route, Routes, Navigate } from "react-router-dom";
+import { Route, Routes, Navigate, useNavigate } from "react-router-dom";
 import AllFungi from "./components/AllFungi";
 import NotFound from "./components/NotFound";
 import EditFungus from "./components/EditFungus";
@@ -11,6 +11,7 @@ import Navbar from "./components/Navbar";
 import NewFungus from "./components/NewFungus";
 import RegisterForm from "./components/RegisterForm";
 import fungi from "./services/fungi";
+import users from "./services/users";
 import ChatBot from "./components/Chatbot";
 import { createTheme } from "@mui/material/styles";
 import { ThemeProvider } from "@mui/material/styles";
@@ -19,14 +20,28 @@ const theme = createTheme({
   palette: {
     primary: {
       main: "#000000",
+      dark: "#ff6d75",
+      light: "#ff8c94",
+    },
+    secondary: {
+      main: "rgb(255, 226, 216, 0.5)",
     },
   },
 });
 
 function App() {
   const [allFungi, setAllFungi] = useState([]);
+  const [token, setToken] = useState(false);
+  const [user, setUser] = useState({});
+  const navigate = useNavigate();
 
   useEffect(() => {
+    const token = window.localStorage.getItem("user-token");
+    if (token) {
+      setToken(true);
+    } else {
+      setToken(false);
+    }
     fungi
       .getAll()
       .then((foundFungi) => {
@@ -37,30 +52,95 @@ function App() {
       });
   }, []);
 
+  useEffect(() => {
+    console.log("log from: useEffect");
+    users
+      .getInfo()
+      .then((user) => {
+        console.log(user);
+        if (
+          user === "Forbidden" ||
+          user === "Unauthorized" ||
+          user === undefined
+        ) {
+          handleLogout();
+        } else {
+          setUser({
+            id: user.id,
+            username: user.username,
+            email: user.email,
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [token]);
+
+  const handleLogout = () => {
+    window.localStorage.removeItem("user-token");
+    setUser({});
+    setToken(false);
+    navigate("/login");
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <div className="App">
-        <Navbar />
+        <Navbar token={token} logout={handleLogout} />
         <ChatBot />
         <Routes>
           <Route path="/" element={<Welcome />} />
-          <Route path="/login" element={<LoginForm />} />
-          <Route path="/register" element={<RegisterForm />} />
+          <Route
+            path="/login"
+            element={
+              token ? <Navigate to="/" /> : <LoginForm setToken={setToken} />
+            }
+          />
+          <Route
+            path="/register"
+            element={token ? <Navigate to="/" /> : <RegisterForm />}
+          />
           <Route path="/fungi" element={<AllFungi allFungi={allFungi} />} />
           <Route
             path="/fungi/new"
             element={
-              <NewFungus allFungi={allFungi} updateFungi={setAllFungi} />
+              token ? (
+                <NewFungus
+                  allFungi={allFungi}
+                  updateFungi={setAllFungi}
+                  handleLogout={handleLogout}
+                />
+              ) : (
+                <>
+                  <Navigate to="/login" />
+                  {/* <Alert/> TODO: create Alert*/}
+                </>
+              )
             }
           />
           <Route
             path="/fungi/:id"
-            element={<Fungus allFungi={allFungi} updateFungi={setAllFungi} />}
+            element={
+              <Fungus
+                allFungi={allFungi}
+                updateFungi={setAllFungi}
+                handleLogout={handleLogout}
+              />
+            }
           />
           <Route
             path="/fungi/:id/edit"
             element={
-              <EditFungus allFungi={allFungi} updateFungi={setAllFungi} />
+              token ? (
+                <EditFungus
+                  allFungi={allFungi}
+                  updateFungi={setAllFungi}
+                  handleLogout={handleLogout}
+                />
+              ) : (
+                <Navigate to="/fungi" />
+              )
             }
           />
           <Route path="/not-found" element={<NotFound />} />

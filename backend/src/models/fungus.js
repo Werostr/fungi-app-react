@@ -35,7 +35,10 @@ const FungusSchema = new Schema(
       type: String,
       required: true,
     },
-    images: [ImageSchema],
+    images: {
+      type: [ImageSchema],
+      required: true,
+    },
     author: {
       type: Schema.Types.ObjectId,
       ref: "User",

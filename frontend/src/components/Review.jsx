@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import reviews from "../services/reviews";
 import { useParams } from "react-router-dom";
-import { Grid, IconButton, Typography, Rating } from "@mui/material";
+import { Grid, IconButton, Typography, Rating, Card } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import HeartRating from "./HeartRating";
 
@@ -10,36 +10,41 @@ export default function Review({
   updateFungi,
   currentFungus,
   review,
+  handleLogout,
 }) {
   const id = useParams().id;
   const reviewId = review._id;
 
   const handleDelete = async () => {
-    const average = await reviews.deleteOne(id, reviewId);
+    const average = await reviews.deleteOne(id, reviewId); // TODO: fix "NotAuthor"
+    console.log(average);
+    if (average === "Forbidden" || average === "Unauthorized") {
+      handleLogout();
+    } else {
+      const updatedFungus = {
+        ...currentFungus,
+        reviews: currentFungus.reviews.filter((e) => e._id !== reviewId),
+        average,
+      };
 
-    const updatedFungus = {
-      ...currentFungus,
-      reviews: currentFungus.reviews.filter((e) => e._id !== reviewId),
-      average,
-    };
-
-    updateFungi(
-      allFungi.map((e) => {
-        if (e._id === id) {
-          return { ...updatedFungus };
-        } else {
-          return e;
-        }
-      })
-    );
+      updateFungi(
+        allFungi.map((e) => {
+          if (e._id === id) {
+            return { ...updatedFungus };
+          } else {
+            return e;
+          }
+        })
+      );
+    }
   };
 
   return (
     <Grid
+      component={Card}
       sx={{
         marginY: 3,
-        borderLeft: "1px solid grey",
-        backgroundColor: "rgb(255, 226, 216, 0.5)",
+        backgroundColor: "secondary.main",
         borderRadius: 2,
       }}
       container
@@ -61,7 +66,7 @@ export default function Review({
           <Typography
             sx={{ display: "flex", justifyContent: "start", paddingX: 1 }}
           >
-            {review.author ? review.author : "author"}
+            {review.author ? review.author.username : "author"}
           </Typography>
         </Grid>
         <Grid

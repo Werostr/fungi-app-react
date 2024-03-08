@@ -13,8 +13,16 @@ const handleUpload = async (file) => {
     resource_type: "auto",
     folder: "fungiElysium",
   });
-  console.log("po handleUpload");
   return res;
+};
+
+const handleDelete = async (file) => {
+  try {
+    const res = await cloudinary.uploader.destroy(file);
+    return res;
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 const storage = multer.memoryStorage();
@@ -22,4 +30,4 @@ const upload = multer({
   storage,
 });
 
-module.exports = { upload, handleUpload };
+module.exports = { upload, handleUpload, handleDelete };

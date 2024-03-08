@@ -16,7 +16,7 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import LooksIcon from "@mui/icons-material/Looks";
 
-export default function Navbar() {
+export default function Navbar({ logout, token }) {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const navigate = useNavigate();
@@ -34,6 +34,12 @@ export default function Navbar() {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const handleLogout = () => {
+    setAnchorElUser(null);
+    logout();
+    navigate("/");
   };
 
   return (
@@ -58,7 +64,6 @@ export default function Navbar() {
           >
             Fungi Elysium
           </Typography>
-
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
@@ -147,34 +152,63 @@ export default function Navbar() {
               Create new
             </Button>
           </Box>
-
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="That's You">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
+          {token ? (
+            <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="That's You">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: "45px" }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                <MenuItem key="fungi" onClick={handleCloseUserMenu}>
+                  <Typography textAlign="center">Your fungi</Typography>
+                </MenuItem>
+                <MenuItem key="logout" onClick={handleLogout}>
+                  <Typography textAlign="center">Logout</Typography>
+                </MenuItem>
+              </Menu>
+            </Box>
+          ) : (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
               }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
             >
-              <MenuItem key="logout" onClick={handleCloseUserMenu}>
-                <Typography textAlign="center">logout</Typography>
-              </MenuItem>
-            </Menu>
-          </Box>
+              <Button
+                onClick={() => {
+                  handleCloseNavMenu();
+                  navigate(`/login`);
+                }}
+              >
+                Login
+              </Button>
+              <Button
+                onClick={() => {
+                  handleCloseNavMenu();
+                  navigate(`/register`);
+                }}
+              >
+                Register
+              </Button>
+            </Box>
+          )}
         </Toolbar>
       </Container>
     </AppBar>

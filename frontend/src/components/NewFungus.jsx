@@ -15,7 +15,7 @@ import {
   Alert,
 } from "@mui/material";
 
-export default function NewFungus({ allFungi, updateFungi }) {
+export default function NewFungus({ allFungi, updateFungi, handleLogout }) {
   const [variety, setVariety] = useState("");
   const [poisonous, setPoisonous] = useState(false);
   const [description, setDescription] = useState("");
@@ -42,9 +42,15 @@ export default function NewFungus({ allFungi, updateFungi }) {
       }
 
       const newFungus = await fungi.addNew(data);
-      updateFungi([...allFungi, { ...newFungus }]);
-
-      navigate(`/fungi/${newFungus._id}`);
+      console.log(newFungus);
+      console.log(newFungus.author);
+      console.log(newFungus.author.username);
+      if (newFungus === "Forbidden" || newFungus === "Unauthorized") {
+        handleLogout();
+      } else {
+        updateFungi([...allFungi, { ...newFungus }]);
+        navigate(`/fungi/${newFungus._id}`);
+      }
     } catch (error) {
       console.log("Error during creating new fungus", error);
     }
@@ -57,31 +63,27 @@ export default function NewFungus({ allFungi, updateFungi }) {
   };
 
   return (
-    <Card
+    <Box
       sx={{
-        backgroundColor: "rgb(255, 226, 216)",
-        backgroundImage:
-          'linear-gradient(rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)),url("https://res.cloudinary.com/dhxufgysz/image/upload/v1708350201/fungiElysium/zg3rifccl5szzuuevi7r.png")',
-        backgroundSize: "cover",
-        margin: "10%",
-        paddingX: "20%",
-        paddingY: "5%",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
+        paddingX: "22%",
+        paddingTop: 4,
       }}
     >
-      <Typography
-        variant="h4"
-        sx={{ marginBottom: 4, borderBottom: 1 }}
-        xs={12}
+      <Card
+        sx={{
+          backgroundColor: "rgb(255, 226, 216)",
+          backgroundImage:
+            'linear-gradient(rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)),url("https://res.cloudinary.com/dhxufgysz/image/upload/v1708350201/fungiElysium/zg3rifccl5szzuuevi7r.png")',
+          backgroundSize: "cover",
+          paddingX: "20%",
+          paddingY: "4%",
+        }}
       >
-        Create new fungus
-      </Typography>
+        <Typography variant="h4" sx={{ marginBottom: 4 }} xs={12}>
+          Create new fungus
+        </Typography>
 
-      <form onSubmit={handleAddFungus}>
-        <Grid container>
+        <Grid component="form" onSubmit={handleAddFungus} container>
           <Grid item sx={{ marginBottom: 2 }} xs={12}>
             <TextField
               color="primary"
@@ -177,7 +179,6 @@ export default function NewFungus({ allFungi, updateFungi }) {
               variant="contained"
               component="label"
               disableElevation
-              //startIcon={<CloudUploadIcon />}
             >
               {fileName || "Attach images"}
               <input
@@ -192,10 +193,10 @@ export default function NewFungus({ allFungi, updateFungi }) {
           <Grid item xs={12}>
             <Button
               sx={{
-                color: "#ff6d75",
-                borderColor: "#ff6d75",
+                color: "primary.dark",
+                borderColor: "primary.light",
                 "&:hover": {
-                  borderColor: "#ff8c94",
+                  borderColor: "primary.dark",
                 },
               }}
               type="submit"
@@ -205,64 +206,7 @@ export default function NewFungus({ allFungi, updateFungi }) {
             </Button>
           </Grid>
         </Grid>
-      </form>
-      {/* <input
-        type="text"
-        placeholder="variety"
-        name="variety"
-        value={variety}
-        onChange={({ target }) => setVariety(target.value)}
-      ></input>
-      <select
-        name="poisonous"
-        onChange={({ target }) => setPoisonous(target.value)}
-      >
-        <option value={false}>No</option>
-        <option value={true}>Yes</option>
-      </select>
-      <input
-        type="text"
-        placeholder="description"
-        name="description"
-        value={description}
-        onChange={({ target }) => setDescription(target.value)}
-      ></input>
-      <input
-        type="text"
-        placeholder="city"
-        name="city"
-        value={city}
-        onChange={({ target }) => setCity(target.value)}
-      ></input>
-      <input
-        type="text"
-        placeholder="country"
-        name="country"
-        value={country}
-        onChange={({ target }) => setCountry(target.value)}
-      ></input>
-      <Button
-        variant="contained"
-        component="label"
-        disableElevation
-        //startIcon={<CloudUploadIcon />}
-      >
-        {fileName || "Attach images"}
-        <input type="file" hidden multiple onChange={handleSelectImages} />
-      </Button>
-      <Button
-        sx={{
-          color: "#ff6d75",
-          borderColor: "#ff6d75",
-          "&:hover": {
-            borderColor: "#ff8c94",
-          },
-        }}
-        type="submit"
-        variant="outlined"
-      >
-        Add
-      </Button> */}
-    </Card>
+      </Card>
+    </Box>
   );
 }

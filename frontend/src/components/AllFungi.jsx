@@ -3,7 +3,13 @@ import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import React, { useEffect, useState } from "react";
 import Masonry from "@mui/lab/Masonry";
-import { Button, CircularProgress, Typography } from "@mui/material";
+import {
+  Button,
+  CircularProgress,
+  Fade,
+  Typography,
+  Grid,
+} from "@mui/material";
 import HeartRating from "./HeartRating";
 
 export default function AllFungi({ allFungi }) {
@@ -23,8 +29,11 @@ export default function AllFungi({ allFungi }) {
         }
       })
     );
-    setIsLoaded(true);
   }, [allFungi, sortOrder]);
+
+  useEffect(() => {
+    setIsLoaded(true);
+  }, [sortedFungi]);
 
   const handleSort = () => {
     const newSortOrder = sortOrder === "asc" ? "desc" : "asc";
@@ -36,13 +45,27 @@ export default function AllFungi({ allFungi }) {
   };
 
   return (
-    <>
-      <Box
+    <Box
+      sx={{
+        padding: { xs: 2, sm: 4, md: 6, lg: 10 },
+        display: "flex",
+        alignItems: "center",
+      }}
+    >
+      <Grid
+        container
         sx={{
-          padding: { xs: 2, sm: 4, md: 6, lg: 10 },
+          width: "100%",
+          minHeight: 829,
+          marginTop: 5,
+          display: "flex",
+          justifyContent: "center",
         }}
       >
-        <Box sx={{ width: "100%", minHeight: 829, marginTop: 5 }}>
+        <Grid
+          item
+          sx={{ display: "flex", justifyContent: "center", width: "100%" }}
+        >
           <Button
             sx={{
               backgroundColor: "#ff6d75",
@@ -50,33 +73,34 @@ export default function AllFungi({ allFungi }) {
                 backgroundColor: "#ff8c94",
               },
               marginBottom: 5,
+              height: "35px",
             }}
             onClick={handleSort}
             variant="contained"
           >
             sort {sortOrder === "asc" ? "descending" : "ascending"} by rating
           </Button>
-          {isLoaded ? (
-            <Masonry
-              columns={{ xs: 1, sm: 1, md: 2, lg: 3, xl: 4 }}
-              spacing={5}
-            >
-              {sortedFungi.map((fungus) => (
+        </Grid>
+
+        <Grid item sx={{ display: "flex", justifyContent: "center" }}>
+          <Masonry columns={{ xs: 1, sm: 1, md: 2, lg: 3, xl: 4 }} spacing={3}>
+            {sortedFungi.map((fungus, index) => (
+              <Fade in={isLoaded} timeout={1000 + index * 300} key={fungus._id}>
                 <Box
-                  key={fungus._id}
                   onClick={() => navigateToFungus(fungus._id)}
                   sx={{
                     cursor: "pointer",
-                    transition: "box-shadow 0.3s, transform 0.3s",
+                    transition: "box-shadow 1s, transform 1s",
+                    borderRadius: "20px",
                     "&:hover": {
                       boxShadow: "0px 0px 15px 0px rgba(0,0,0,0.4)",
-                      transform: "scale(1.03)",
+                      transform: "scale(1.04)",
                     },
                   }}
                 >
                   <Box
                     sx={{
-                      borderRadius: 1,
+                      borderRadius: "20px 20px 0px 0px",
                       backgroundColor: "rgb(255, 226, 216, 0.5)",
                       display: "flex",
                       justifyContent: "space-between",
@@ -91,30 +115,38 @@ export default function AllFungi({ allFungi }) {
                     />
                     <Typography>{fungus.variety}</Typography>
                   </Box>
-
-                  <img
-                    srcSet={`${fungus.images[0].url}?w=162&auto=format&dpr=2 2x`}
-                    src={`${fungus.images[0].url}?w=162&auto=format`}
-                    alt={fungus.variety}
-                    loading="lazy"
-                    style={{
-                      borderBottomLeftRadius: 4,
-                      borderBottomRightRadius: 4,
-                      display: "block",
-                      width: "100%",
-                      backgroundColor: "rgb(255, 226, 216, 0.5)",
-                    }}
-                  />
+                  {isLoaded ? (
+                    <img
+                      srcSet={`${fungus.images[0].url}?w=162&auto=format&dpr=2 2x`}
+                      src={`${fungus.images[0].url}?w=162&auto=format`}
+                      alt={fungus.variety}
+                      loading="lazy"
+                      style={{
+                        borderRadius: "2px 2px 20px 20px",
+                        display: "block",
+                        width: "100%",
+                        backgroundColor: "rgb(255, 226, 216, 0.5)",
+                      }}
+                    />
+                  ) : (
+                    <Box
+                      sx={{
+                        padding: 4,
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        backgroundColor: "rgb(255, 226, 216, 0.5)",
+                      }}
+                    >
+                      <CircularProgress disableShrink />
+                    </Box>
+                  )}
                 </Box>
-              ))}
-            </Masonry>
-          ) : (
-            <Box sx={{ marginTop: 5 }}>
-              <CircularProgress disableShrink />
-            </Box>
-          )}
-        </Box>
-      </Box>
-    </>
+              </Fade>
+            ))}
+          </Masonry>
+        </Grid>
+      </Grid>
+    </Box>
   );
 }

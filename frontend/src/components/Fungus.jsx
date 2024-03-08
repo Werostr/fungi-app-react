@@ -18,9 +18,10 @@ import {
 
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
-import Zoom from "react-medium-image-zoom";
+import HeartRating from "./HeartRating";
+import { NoMeals, Restaurant } from "@mui/icons-material";
 
-export default function Fungus({ allFungi, updateFungi }) {
+export default function Fungus({ allFungi, updateFungi, handleLogout }) {
   const id = useParams().id;
   const navigate = useNavigate();
   const [isLoaded, setIsLoaded] = useState(false);
@@ -42,19 +43,25 @@ export default function Fungus({ allFungi, updateFungi }) {
   }, [id, allFungi]);
 
   const handleDelete = async () => {
-    await fungi.deleteOne(id);
-    const updatedFungi = allFungi.filter((c) => c._id !== id);
-    updateFungi(updatedFungi);
-    navigate("/fungi");
+    const res = await fungi.deleteOne(id);
+    console.log(res);
+    if (res === "Forbidden" || res === "Unauthorized") {
+      handleLogout();
+    } else if (res === "OK") {
+      const updatedFungi = allFungi.filter((c) => c._id !== id);
+      updateFungi(updatedFungi);
+      navigate("/fungi");
+    }
   };
 
   return (
     <Grid container>
       <Grid item xs={12} sm={12} md={6} lg={6}>
-        <Card sx={{ margin: 10, backgroundColor: "rgb(255, 226, 216, 0.5)" }}>
+        <Card
+          sx={{ marginX: 5, marginY: 10, backgroundColor: "secondary.main" }}
+        >
           <Carousel
             showArrows={true}
-            //infiniteLoop={true}
             showThumbs={false}
             sx={{
               display: "flex",
@@ -92,34 +99,114 @@ export default function Fungus({ allFungi, updateFungi }) {
               ))}
           </Carousel>
           <CardContent>
-            <Grid item xs={6}>
-              <Typography>{currentFungus.description}</Typography>
+            <Grid
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                marginBottom: 1,
+              }}
+              item
+              xs={12}
+            >
+              <HeartRating
+                name="currentFungus.average"
+                value={currentFungus.average || 0}
+                precision={0.5}
+                readOnly
+              />
             </Grid>
-            <Grid item xs={6}></Grid>
-            <Grid item xs={12}>
-              <Typography>{currentFungus.average}</Typography>
+            <Grid container spacing={1}>
+              <Grid
+                sx={{
+                  backgroundColor: "secondary.main",
+                  marginY: 1,
+                  display: "flex",
+                  justifyContent: "start",
+                  textAlign: "start",
+                }}
+                component={Card}
+                item
+                xs={7}
+              >
+                <Typography
+                  sx={{
+                    padding: 1,
+                    wordWrap: "break-word",
+                    overflowWrap: "break-word",
+                    inlineSize: "95%",
+                  }}
+                >
+                  {currentFungus.description}
+                </Typography>
+              </Grid>
+
+              <Grid item xs={5}>
+                <Grid
+                  sx={{
+                    backgroundColor: "secondary.main",
+                    marginBottom: 1,
+                    paddingY: 1,
+                  }}
+                  component={Card}
+                  item
+                  xs={12}
+                >
+                  <Typography>{currentFungus.variety}</Typography>
+                </Grid>
+
+                <Grid
+                  sx={{
+                    backgroundColor: "secondary.main",
+                    marginBottom: 1,
+                    paddingY: 1,
+                  }}
+                  component={Card}
+                  item
+                  xs={12}
+                >
+                  <Typography
+                    sx={{ display: "flex", justifyContent: "center" }}
+                  >
+                    {currentFungus.poisonous ? (
+                      <NoMeals></NoMeals>
+                    ) : (
+                      <Restaurant></Restaurant>
+                    )}
+                  </Typography>
+                </Grid>
+                <Grid
+                  sx={{
+                    backgroundColor: "secondary.main",
+                    marginBottom: 1,
+                    paddingY: 1,
+                  }}
+                  component={Card}
+                  item
+                  xs={12}
+                >
+                  <Typography>
+                    {currentFungus.city}, {currentFungus.country}
+                  </Typography>
+                </Grid>
+                <Grid
+                  sx={{
+                    backgroundColor: "secondary.main",
+                    marginBottom: 1,
+                    paddingY: 1,
+                  }}
+                  component={Card}
+                  item
+                  xs={12}
+                >
+                  <Typography>
+                    {currentFungus.author
+                      ? currentFungus.author.username
+                      : "author"}
+                  </Typography>
+                </Grid>
+              </Grid>
             </Grid>
-            <Grid item xs={12}>
-              <Typography>
-                a{currentFungus.author && currentFungus.author}
-              </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography>
-                {currentFungus.city},{currentFungus.country}
-              </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography>
-                {currentFungus.poisonous === true ? "x" : "git"}
-              </Typography>
-            </Grid>
-            {/* <Typography gutterBottom variant="h5" component="div">
-                {currentFungus.variety}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {currentFungus.description}
-              </Typography> */}
           </CardContent>
           <CardActions>
             <Button
@@ -139,10 +226,11 @@ export default function Fungus({ allFungi, updateFungi }) {
       <Grid item xs={12} sm={12} md={6} lg={6}>
         <Card
           sx={{
-            margin: 10,
+            marginX: 5,
+            marginY: 10,
             padding: 10,
             width: "auto",
-            backgroundColor: "rgb(255, 226, 216, 0.5)",
+            backgroundColor: "secondary.main",
           }}
         >
           <Grid container>
@@ -151,6 +239,7 @@ export default function Fungus({ allFungi, updateFungi }) {
               currentFungus={currentFungus}
               updateFungus={setCurrentFungus}
               updateFungi={updateFungi}
+              handleLogout={handleLogout}
             />
           </Grid>
 
@@ -168,6 +257,7 @@ export default function Fungus({ allFungi, updateFungi }) {
                       updateFungi={updateFungi}
                       currentFungus={currentFungus}
                       review={review}
+                      handleLogout={handleLogout}
                     />
                   );
                 })}
@@ -176,66 +266,4 @@ export default function Fungus({ allFungi, updateFungi }) {
       </Grid>
     </Grid>
   );
-  {
-    /* <Box
-      sx={{
-        display: "flex",
-        flexDirection: { xs: "column", sm: "column", md: "row", lg: "row" },
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <Box>
-        <Card sx={{ margin: 10, width: 400 }}>
-          <CardMedia
-            component="img"
-            alt="green iguana"
-            height="300"
-            image="https://images.unsplash.com/photo-1706545512982-b457dbd80aeb?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-          />
-          <CardContent>
-            <Typography gutterBottom variant="h5" component="div">
-              {currentFungus.variety}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {currentFungus.description}
-            </Typography>
-          </CardContent>
-          <CardActions>
-            <Button
-              onClick={() => {
-                navigate(`/fungi/${id}/edit`);
-              }}
-              size="small"
-            >
-              Edit
-            </Button>
-            <Button onClick={handleDelete} size="small">
-              Delete
-            </Button>
-          </CardActions>
-        </Card>
-      </Box>
-      <Box>
-        <Card sx={{ margin: 10, padding: 5 }}>
-          <ReviewForm
-            allFungi={allFungi}
-            currentFungus={currentFungus}
-            updateFungus={updateFungus}
-          />
-          {currentFungus.reviews &&
-            currentFungus.reviews.map((review) => {
-              return (
-                <Review
-                  allFungi={allFungi}
-                  updateFungus={updateFungus}
-                  currentFungus={currentFungus}
-                  review={review}
-                />
-              );
-            })}
-        </Card>
-      </Box>
-    </Box> */
-  }
 }

@@ -9,6 +9,7 @@ export default function ReviewForm({
   currentFungus,
   updateFungus,
   updateFungi,
+  handleLogout,
 }) {
   const id = useParams().id;
   const [comment, setComment] = useState("");
@@ -23,18 +24,21 @@ export default function ReviewForm({
       };
 
       const { savedReview, average } = await reviews.addNew(id, data);
-
-      currentFungus.reviews.push(savedReview);
-      currentFungus.average = average;
-      updateFungi(
-        allFungi.map((e) => {
-          if (e._id === currentFungus._id) {
-            return { ...currentFungus };
-          } else {
-            return e;
-          }
-        })
-      );
+      if (savedReview === "Forbidden" || savedReview === "Unauthorized") {
+        handleLogout();
+      } else {
+        currentFungus.reviews.push(savedReview);
+        currentFungus.average = average;
+        updateFungi(
+          allFungi.map((e) => {
+            if (e._id === currentFungus._id) {
+              return { ...currentFungus };
+            } else {
+              return e;
+            }
+          })
+        );
+      }
 
       // updateFungus({
       //   ...currentFungus,
@@ -55,88 +59,62 @@ export default function ReviewForm({
         </Typography>
       </Box>
 
-      <form
-        style={{
+      <Grid
+        component="form"
+        onSubmit={handleAddReview}
+        sx={{
+          paddingBottom: 1,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
           width: "100%",
         }}
-        onSubmit={handleAddReview}
+        container
       >
         <Grid
           sx={{
-            paddingBottom: 1,
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
           }}
-          container
-          spacing={2}
+          item
+          xs={12}
         >
-          <Grid
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-            item
-            xs={12}
-          >
-            <HeartRating
-              name="rating"
-              value={rating}
-              getLabelText={(value) =>
-                `${value} Heart${value !== 1 ? "s" : ""}`
-              }
-              precision={0.5}
-              onChange={(event, value) => setRating(value)}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              label="Comment"
-              name="comment"
-              value={comment}
-              multiline
-              rows={3}
-              onChange={({ target }) => setComment(target.value)}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <Button
-              sx={{
-                color: "#ff6d75",
-                borderColor: "#ff6d75",
-                "&:hover": {
-                  borderColor: "#ff8c94",
-                },
-              }}
-              type="submit"
-              variant="outlined"
-            >
-              Add
-            </Button>
-          </Grid>
+          <HeartRating
+            name="rating"
+            value={rating}
+            getLabelText={(value) => `${value} Heart${value !== 1 ? "s" : ""}`}
+            precision={0.5}
+            onChange={(event, value) => setRating(value)}
+          />
         </Grid>
-      </form>
-
-      {/* // <Card sx={{ padding: 2 }}>
-    //   <form onSubmit={handleAddReview}>
-    //     <input
-    //       type="text"
-    //       placeholder="comment"
-    //       name="comment"
-    //       value={comment}
-    //       onChange={({ target }) => setComment(target.value)}
-    //     ></input>
-    //     <input
-    //       type="number"
-    //       placeholder="rating"
-    //       name="rating"
-    //       value={rating}
-    //       onChange={({ target }) => setRating(target.value)}
-    //     ></input>
-    //     <button>Add review</button>
-    //   </form>
-    // </Card> */}
+        <Grid sx={{ marginY: 2 }} item xs={12}>
+          <TextField
+            required
+            label="Comment"
+            name="comment"
+            value={comment}
+            multiline
+            rows={3}
+            onChange={({ target }) => setComment(target.value)}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <Button
+            sx={{
+              color: "primary.dark",
+              borderColor: "primary.light",
+              "&:hover": {
+                borderColor: "primary.dark",
+              },
+            }}
+            type="submit"
+            variant="outlined"
+          >
+            Add
+          </Button>
+        </Grid>
+      </Grid>
     </>
   );
 }
