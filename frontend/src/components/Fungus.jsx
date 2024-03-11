@@ -21,7 +21,7 @@ import { Carousel } from "react-responsive-carousel";
 import HeartRating from "./HeartRating";
 import { NoMeals, Restaurant } from "@mui/icons-material";
 
-export default function Fungus({ allFungi, updateFungi, handleLogout }) {
+export default function Fungus({ allFungi, updateFungi, handleLogout, user }) {
   const id = useParams().id;
   const navigate = useNavigate();
   const [isLoaded, setIsLoaded] = useState(false);
@@ -208,19 +208,21 @@ export default function Fungus({ allFungi, updateFungi, handleLogout }) {
               </Grid>
             </Grid>
           </CardContent>
-          <CardActions>
-            <Button
-              onClick={() => {
-                navigate(`/fungi/${id}/edit`);
-              }}
-              size="small"
-            >
-              Edit
-            </Button>
-            <Button onClick={handleDelete} size="small">
-              Delete
-            </Button>
-          </CardActions>
+          {currentFungus.author && user.id === currentFungus.author._id && (
+            <CardActions>
+              <Button
+                onClick={() => {
+                  navigate(`/fungi/${id}/edit`);
+                }}
+                size="small"
+              >
+                Edit
+              </Button>
+              <Button onClick={handleDelete} size="small">
+                Delete
+              </Button>
+            </CardActions>
+          )}
         </Card>
       </Grid>
       <Grid item xs={12} sm={12} md={6} lg={6}>
@@ -240,6 +242,7 @@ export default function Fungus({ allFungi, updateFungi, handleLogout }) {
               updateFungus={setCurrentFungus}
               updateFungi={updateFungi}
               handleLogout={handleLogout}
+              user={user}
             />
           </Grid>
 
@@ -253,11 +256,11 @@ export default function Fungus({ allFungi, updateFungi, handleLogout }) {
                     <Review
                       key={review._id}
                       allFungi={allFungi}
-                      updateFungus={setCurrentFungus}
                       updateFungi={updateFungi}
                       currentFungus={currentFungus}
                       review={review}
                       handleLogout={handleLogout}
+                      user={user}
                     />
                   );
                 })}

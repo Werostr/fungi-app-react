@@ -1,6 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
 import React, { useEffect, useState } from "react";
 import Masonry from "@mui/lab/Masonry";
 import {
@@ -9,6 +7,7 @@ import {
   Fade,
   Typography,
   Grid,
+  Box,
 } from "@mui/material";
 import HeartRating from "./HeartRating";
 

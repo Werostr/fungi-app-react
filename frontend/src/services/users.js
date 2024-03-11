@@ -15,7 +15,6 @@ const handleError = (err) => {
 
 const register = async (credentials) => {
   try {
-    console.log(credentials);
     const res = await axios.post(
       `http://localhost:9000/api/users/register`,
       credentials

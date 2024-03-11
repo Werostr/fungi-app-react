@@ -11,7 +11,6 @@ export default function LoginForm({ setToken }) {
     event.preventDefault();
     try {
       const user = await users.login({ email, password });
-      console.log(user);
       window.localStorage.setItem("user-token", user.token); // TODO: what happens when token expires after 1 h
       setToken(true);
     } catch (error) {
@@ -31,7 +30,6 @@ export default function LoginForm({ setToken }) {
       <Card
         sx={{
           backgroundColor: "rgb(255, 226, 216)",
-
           paddingY: 6,
         }}
       >

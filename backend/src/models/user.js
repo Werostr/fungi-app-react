@@ -12,6 +12,12 @@ const UserSchema = new Schema({
     required: true,
     unique: true,
   },
+  fungi: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Fungus",
+    },
+  ],
   passwordHash: String,
 });
 

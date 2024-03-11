@@ -10,11 +10,12 @@ import LoginForm from "./components/LoginForm";
 import Navbar from "./components/Navbar";
 import NewFungus from "./components/NewFungus";
 import RegisterForm from "./components/RegisterForm";
+import UserFungi from "./components/UserFungi";
 import fungi from "./services/fungi";
 import users from "./services/users";
 import ChatBot from "./components/Chatbot";
-import { createTheme } from "@mui/material/styles";
-import { ThemeProvider } from "@mui/material/styles";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const theme = createTheme({
   palette: {
@@ -53,7 +54,6 @@ function App() {
   }, []);
 
   useEffect(() => {
-    console.log("log from: useEffect");
     users
       .getInfo()
       .then((user) => {
@@ -69,13 +69,14 @@ function App() {
             id: user.id,
             username: user.username,
             email: user.email,
+            fungi: user.fungi,
           });
         }
       })
       .catch((err) => {
         console.log(err);
       });
-  }, [token]);
+  }, [token, allFungi]);
 
   const handleLogout = () => {
     window.localStorage.removeItem("user-token");
@@ -101,24 +102,34 @@ function App() {
             path="/register"
             element={token ? <Navigate to="/" /> : <RegisterForm />}
           />
+
           <Route path="/fungi" element={<AllFungi allFungi={allFungi} />} />
-          <Route
-            path="/fungi/new"
-            element={
-              token ? (
+
+          <Route element={<ProtectedRoute user={user} />}>
+            <Route path="/user" element={<UserFungi user={user} />} />
+            <Route
+              path="/fungi/new"
+              element={
                 <NewFungus
                   allFungi={allFungi}
                   updateFungi={setAllFungi}
                   handleLogout={handleLogout}
                 />
-              ) : (
-                <>
-                  <Navigate to="/login" />
-                  {/* <Alert/> TODO: create Alert*/}
-                </>
-              )
-            }
-          />
+              }
+            />
+            <Route
+              path="/fungi/:id/edit"
+              element={
+                <EditFungus
+                  allFungi={allFungi}
+                  updateFungi={setAllFungi}
+                  handleLogout={handleLogout}
+                  user={user}
+                />
+              }
+            />
+          </Route>
+
           <Route
             path="/fungi/:id"
             element={
@@ -126,23 +137,11 @@ function App() {
                 allFungi={allFungi}
                 updateFungi={setAllFungi}
                 handleLogout={handleLogout}
+                user={user}
               />
             }
           />
-          <Route
-            path="/fungi/:id/edit"
-            element={
-              token ? (
-                <EditFungus
-                  allFungi={allFungi}
-                  updateFungi={setAllFungi}
-                  handleLogout={handleLogout}
-                />
-              ) : (
-                <Navigate to="/fungi" />
-              )
-            }
-          />
+
           <Route path="/not-found" element={<NotFound />} />
           <Route path="*" element={<Navigate to="/not-found" />} />
         </Routes>

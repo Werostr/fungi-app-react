@@ -42,6 +42,11 @@ export default function Navbar({ logout, token }) {
     navigate("/");
   };
 
+  const handleShowFungi = () => {
+    setAnchorElUser(null);
+    navigate("/user");
+  };
+
   return (
     <AppBar sx={{ backgroundColor: "#ff6d75" }} position="sticky">
       <Container maxWidth="false">
@@ -175,7 +180,7 @@ export default function Navbar({ logout, token }) {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                <MenuItem key="fungi" onClick={handleCloseUserMenu}>
+                <MenuItem key="fungi" onClick={handleShowFungi}>
                   <Typography textAlign="center">Your fungi</Typography>
                 </MenuItem>
                 <MenuItem key="logout" onClick={handleLogout}>

@@ -36,15 +36,11 @@ reviewsRouter.delete("/:reviewId", authenticateUser, async (req, res) => {
     const { id, reviewId } = req.params;
     const fungus = await Fungus.findById(id).populate("reviews");
     const review = await Review.findById(reviewId).populate("author");
-    console.log("w reviewsRouter");
-    console.log(review.author.id);
-    console.log(req.user.userId);
-    console.log("przed ifem");
+
     if (review.author.id !== req.user.userId) {
-      console.log("w ifie");
       return res.status(403).json({ error: "Not Author." });
     }
-    console.log("przeszło");
+
     const reviewIndex = fungus.reviews.findIndex((r) => r._id.equals(reviewId));
 
     if (reviewIndex !== -1) {

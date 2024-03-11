@@ -1,6 +1,7 @@
 const express = require("express");
 const fungiRouter = express.Router();
 const Fungus = require("../models/fungus");
+const User = require("../models/user");
 const cloudinary = require("../utils/cloudinary");
 const authenticateUser = require("../utils/authentication");
 
@@ -19,7 +20,6 @@ fungiRouter.post(
   cloudinary.upload.array("files"),
   async (req, res) => {
     const { files } = req;
-    console.log(files);
 
     try {
       const newFungus = new Fungus({
@@ -30,6 +30,10 @@ fungiRouter.post(
         country: req.body.country,
         author: req.user.userId,
       });
+
+      const user = await User.findById(req.user.userId);
+      user.fungi.push(newFungus);
+      await user.save();
 
       if (files) {
         const uploadPromises = files.map(async (file) => {
@@ -128,10 +132,12 @@ fungiRouter.put(
 fungiRouter.delete("/:id", authenticateUser, async (req, res) => {
   try {
     const id = req.params.id;
+
     const fungus = await Fungus.findById(id).populate("author");
     if (fungus.author.id !== req.user.userId) {
       return res.status(403).json({ error: "Not Author." });
     }
+    await User.findByIdAndUpdate(req.user.userId, { $pull: { fungi: id } });
     const deletedFungus = await Fungus.findByIdAndDelete(id);
     await Promise.all(
       deletedFungus.images.map(

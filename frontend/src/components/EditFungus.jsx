@@ -14,7 +14,12 @@ import {
   Typography,
 } from "@mui/material";
 
-export default function EditFungus({ allFungi, updateFungi, handleLogout }) {
+export default function EditFungus({
+  allFungi,
+  updateFungi,
+  handleLogout,
+  user,
+}) {
   const id = useParams().id;
   const [variety, setVariety] = useState("");
   const [poisonous, setPoisonous] = useState(null);
@@ -31,6 +36,9 @@ export default function EditFungus({ allFungi, updateFungi, handleLogout }) {
       .then((foundFungus) => {
         if (!foundFungus) {
           navigate("/not-found");
+        }
+        if (user.id !== foundFungus.author._id) {
+          navigate("/");
         }
         setVariety(foundFungus.variety);
         setPoisonous(foundFungus.poisonous);

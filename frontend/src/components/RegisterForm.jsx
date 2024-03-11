@@ -11,10 +11,7 @@ export default function RegisterForm() {
   const handleRegister = async (event) => {
     event.preventDefault();
     try {
-      const user = await users.register({ username, email, password });
-      setEmail("");
-      setUsername("");
-      setPassword("");
+      await users.register({ username, email, password });
     } catch (error) {
       console.log("Error during creating new account", error);
     }
@@ -45,6 +42,7 @@ export default function RegisterForm() {
           </Grid>
           <Grid xs={12} item>
             <TextField
+              id="username"
               label="Username"
               name="username"
               value={username}
@@ -54,6 +52,7 @@ export default function RegisterForm() {
           </Grid>
           <Grid xs={12} item>
             <TextField
+              id="email"
               type="email"
               label="Email"
               name="email"
@@ -64,6 +63,7 @@ export default function RegisterForm() {
           </Grid>
           <Grid xs={12} item>
             <TextField
+              id="password"
               label="Password"
               name="password"
               value={password}

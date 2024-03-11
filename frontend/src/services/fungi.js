@@ -35,7 +35,6 @@ const getOneById = async (id) => {
 const addNew = async (data) => {
   try {
     const token = getToken();
-
     const res = await axios.post(`http://localhost:9000/api/fungi`, data, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -75,4 +74,10 @@ const deleteOne = async (id) => {
   }
 };
 
-export default { getAll, getOneById, addNew, updateOne, deleteOne };
+export default {
+  getAll,
+  getOneById,
+  addNew,
+  updateOne,
+  deleteOne,
+};

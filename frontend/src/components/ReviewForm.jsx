@@ -7,9 +7,9 @@ import { Box, Grid, Typography, Button, TextField } from "@mui/material";
 export default function ReviewForm({
   allFungi,
   currentFungus,
-  updateFungus,
   updateFungi,
   handleLogout,
+  user,
 }) {
   const id = useParams().id;
   const [comment, setComment] = useState("");
@@ -82,6 +82,7 @@ export default function ReviewForm({
         >
           <HeartRating
             name="rating"
+            disabled={user.id ? false : true}
             value={rating}
             getLabelText={(value) => `${value} Heart${value !== 1 ? "s" : ""}`}
             precision={0.5}
@@ -90,10 +91,11 @@ export default function ReviewForm({
         </Grid>
         <Grid sx={{ marginY: 2 }} item xs={12}>
           <TextField
-            required
+            required={user.id ? true : false}
+            disabled={user.id ? false : true}
             label="Comment"
             name="comment"
-            value={comment}
+            value={user.id ? comment : "Sign in to leave a review"}
             multiline
             rows={3}
             onChange={({ target }) => setComment(target.value)}
@@ -110,6 +112,7 @@ export default function ReviewForm({
             }}
             type="submit"
             variant="outlined"
+            disabled={user.id ? false : true}
           >
             Add
           </Button>

@@ -8,12 +8,19 @@ const config = require("../utils/config");
 
 usersRouter.get("/", authenticateUser, async (req, res) => {
   try {
-    const user = await User.findOne({ email: req.user.email });
+    const user = await User.findOne({ email: req.user.email }).populate(
+      "fungi"
+    );
 
     if (!user) {
       return res.status(404).json({ error: "User not found." });
     }
-    res.json({ id: user._id, email: user.email, username: user.username });
+    res.json({
+      id: user._id,
+      email: user.email,
+      username: user.username,
+      fungi: user.fungi,
+    });
   } catch (err) {
     console.log(err); // comes back here after token expires cause can't read req.user.email
   }
@@ -45,8 +52,8 @@ usersRouter.post("/register", async (req, res) => {
     const passwordHash = await bcrypt.hash(password, 10);
 
     const newUser = new User({ email, username, passwordHash });
-    const savedUser = await newUser.save();
-    return res.status(200).json(savedUser);
+    await newUser.save();
+    return res.status(200);
   } catch (e) {
     res.status(500).json({ error: "Error during registration." });
   }

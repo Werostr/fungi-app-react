@@ -11,6 +11,7 @@ export default function Review({
   currentFungus,
   review,
   handleLogout,
+  user,
 }) {
   const id = useParams().id;
   const reviewId = review._id;
@@ -105,9 +106,11 @@ export default function Review({
         item
         xs={3}
       >
-        <IconButton aria-label="delete" onClick={handleDelete}>
-          <DeleteIcon />
-        </IconButton>
+        {user.id === review.author._id && (
+          <IconButton aria-label="delete" onClick={handleDelete}>
+            <DeleteIcon />
+          </IconButton>
+        )}
       </Grid>
     </Grid>
   );
