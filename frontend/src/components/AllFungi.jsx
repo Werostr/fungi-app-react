@@ -8,6 +8,7 @@ import {
   Typography,
   Grid,
   Box,
+  Container,
 } from "@mui/material";
 import HeartRating from "./HeartRating";
 
@@ -44,11 +45,10 @@ export default function AllFungi({ allFungi }) {
   };
 
   return (
-    <Box
+    <Container
+      maxWidth="xl"
       sx={{
-        padding: { xs: 2, sm: 4, md: 6, lg: 10 },
-        display: "flex",
-        alignItems: "center",
+        paddingX: { xs: 5, sm: 7, md: 5, lg: 3, xl: 1 },
       }}
     >
       <Grid
@@ -146,6 +146,6 @@ export default function AllFungi({ allFungi }) {
           </Masonry>
         </Grid>
       </Grid>
-    </Box>
+    </Container>
   );
 }

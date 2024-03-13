@@ -13,16 +13,13 @@ export default function UserFungi({ user }) {
 
   return (
     <Container
+      maxWidth="xl"
       sx={{
-        padding: { xs: 2, sm: 4, md: 6, lg: 10 },
-        display: "flex",
-        alignItems: "center",
+        paddingX: { xs: 5, sm: 7, md: 5, lg: 3, xl: 0 },
       }}
     >
-      <Grid
-        container
+      <Box
         sx={{
-          width: "100%",
           minHeight: 829,
           marginTop: 5,
           display: "flex",
@@ -77,7 +74,7 @@ export default function UserFungi({ user }) {
             </Fade>
           ))}
         </Masonry>
-      </Grid>
+      </Box>
     </Container>
   );
 }

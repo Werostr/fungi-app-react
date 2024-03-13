@@ -1,15 +1,16 @@
-var createError = require("http-errors");
+const createError = require("http-errors");
 const mongoose = require("mongoose");
-var express = require("express");
-var path = require("path");
-var cookieParser = require("cookie-parser");
-var logger = require("morgan");
-var cors = require("cors");
-//const config = require("../src/utils/config");
+const express = require("express");
+const path = require("path");
+const cookieParser = require("cookie-parser");
+const logger = require("morgan");
+const cors = require("cors");
+const config = require("../src/utils/config");
 //const cloudinary = require("./utils/cloudinary");
+// "mongodb://127.0.0.1:27017/fungi-elysium"
 
 mongoose
-  .connect("mongodb://127.0.0.1:27017/fungi-elysium")
+  .connect(config.MONGODB_URI)
   .then(() => {
     console.log("CONNECTED TO MONGODB");
   })

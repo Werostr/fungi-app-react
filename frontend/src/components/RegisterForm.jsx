@@ -1,6 +1,14 @@
 import { useState } from "react";
 import users from "../services/users";
-import { Grid, TextField, Card, Button, Box, Typography } from "@mui/material";
+import {
+  Grid,
+  TextField,
+  Card,
+  Button,
+  Box,
+  Typography,
+  Container,
+} from "@mui/material";
 import { EmojiPeople } from "@mui/icons-material";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -37,90 +45,105 @@ export default function RegisterForm() {
     }
   };
   return (
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        paddingY: 10,
-        paddingX: "20%",
-      }}
+    <Container
+      maxWidth="xl"
+      sx={{ display: "flex", justifyContent: "center", paddingTop: 5 }}
     >
-      <Card
+      <Box
         sx={{
-          backgroundColor: "rgb(255, 226, 216)",
-          paddingY: 6,
+          width: "50%",
         }}
       >
-        <Grid component="form" container onSubmit={handleRegister} spacing={2}>
-          <Grid xs={12} sx={{ display: "flex", justifyContent: "center" }} item>
-            <EmojiPeople
-              sx={{
-                fontSize: "70px",
-              }}
-            ></EmojiPeople>
-          </Grid>
-          <Grid xs={12} item>
-            <TextField
-              id="username"
-              label="Username"
-              name="username"
-              value={username}
-              onChange={({ target }) => setUsername(target.value)}
-              required
-              error={errorUsername ? true : false}
-              helperText={errorUsername ? "Username already exists" : false}
-            />
-          </Grid>
-          <Grid xs={12} item>
-            <TextField
-              id="email"
-              type="email"
-              label="Email"
-              name="email"
-              value={email}
-              onChange={({ target }) => setEmail(target.value)}
-              required
-              error={errorEmail ? true : false}
-              helperText={errorEmail ? "Email already exists" : false}
-            />
-          </Grid>
-          <Grid xs={12} item>
-            <TextField
-              type="password"
-              id="password"
-              label="Password"
-              name="password"
-              value={password}
-              onChange={({ target }) => setPassword(target.value)}
-              required
-              error={errorPassword ? true : false}
-              helperText={errorPassword ? "At least 7 letters" : false}
-            />
-          </Grid>
-          <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
-            <Typography sx={{ width: "50%" }}>
-              If you already have an account, you can{" "}
-              <Link to="/login">log in</Link>.
-            </Typography>
-          </Grid>
-          <Grid xs={12} item>
-            <Button
-              sx={{
-                color: "primary.dark",
-                borderColor: "primary.light",
-                "&:hover": {
-                  borderColor: "primary.dark",
-                },
-              }}
-              type="submit"
-              variant="outlined"
+        <Card
+          sx={{
+            backgroundColor: "secondary.dark",
+            paddingY: 6,
+            paddingX: 5,
+          }}
+        >
+          <Grid
+            component="form"
+            container
+            onSubmit={handleRegister}
+            spacing={2}
+          >
+            <Grid
+              xs={12}
+              sx={{ display: "flex", justifyContent: "center" }}
+              item
             >
-              Register
-            </Button>
+              <EmojiPeople
+                sx={{
+                  fontSize: "70px",
+                }}
+              ></EmojiPeople>
+            </Grid>
+            <Grid xs={12} item>
+              <TextField
+                id="username"
+                label="Username"
+                name="username"
+                value={username}
+                onChange={({ target }) => setUsername(target.value)}
+                required
+                error={errorUsername ? true : false}
+                helperText={errorUsername ? "Username already exists" : false}
+              />
+            </Grid>
+            <Grid xs={12} item>
+              <TextField
+                id="email"
+                type="email"
+                label="Email"
+                name="email"
+                value={email}
+                onChange={({ target }) => setEmail(target.value)}
+                required
+                error={errorEmail ? true : false}
+                helperText={errorEmail ? "Email already exists" : false}
+              />
+            </Grid>
+            <Grid xs={12} item>
+              <TextField
+                type="password"
+                id="password"
+                label="Password"
+                name="password"
+                value={password}
+                onChange={({ target }) => setPassword(target.value)}
+                required
+                error={errorPassword ? true : false}
+                helperText={errorPassword ? "At least 7 letters" : false}
+              />
+            </Grid>
+            <Grid
+              item
+              xs={12}
+              sx={{ display: "flex", justifyContent: "center" }}
+            >
+              <Typography sx={{ width: "70%" }}>
+                If you already have an account, you can{" "}
+                <Link to="/login">log in</Link>.
+              </Typography>
+            </Grid>
+            <Grid xs={12} item>
+              <Button
+                sx={{
+                  color: "primary.dark",
+                  borderColor: "primary.light",
+                  "&:hover": {
+                    borderColor: "primary.dark",
+                  },
+                }}
+                type="submit"
+                variant="outlined"
+              >
+                Register
+              </Button>
+            </Grid>
           </Grid>
-        </Grid>
-      </Card>
-    </Box>
+        </Card>
+      </Box>
+    </Container>
   );
 }

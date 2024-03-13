@@ -26,6 +26,7 @@ const theme = createTheme({
     },
     secondary: {
       main: "rgb(255, 226, 216, 0.5)",
+      dark: "rgb(255, 226, 216)",
     },
   },
 });
