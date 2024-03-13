@@ -27,33 +27,33 @@ usersRouter.get("/", authenticateUser, async (req, res) => {
 });
 
 usersRouter.post("/register", async (req, res) => {
-  const { email, username, password } = req.body;
-  if (!(password && email && username)) {
-    return res.status(400).json({ message: "Missing credentials." });
-  } else if (password.length < 5 || email.length < 5) {
-    return res.status(400).json({
-      message: "Password and email should be at least 5 characters long.",
-    });
-  }
-
   try {
+    const { email, username, password } = req.body;
+    let errors = [];
+
+    if (!(password && email && username)) {
+      return res.status(400).json({ error: "Missing credentials." });
+    }
+    if (password.length < 7 || email.length < 5) {
+      errors.push("shortPassword");
+    }
+
     const existingEmail = await User.findOne({ email });
     const existingUsername = await User.findOne({ username });
     if (existingEmail) {
-      return res
-        .status(400)
-        .json({ error: "User with this email already exists." });
+      errors.push("emailExists");
     }
     if (existingUsername) {
-      return res
-        .status(400)
-        .json({ error: "User with this username already exists." });
+      errors.push("usernameExists");
+    }
+    if (errors.length !== 0) {
+      return res.status(400).json(errors);
     }
     const passwordHash = await bcrypt.hash(password, 10);
 
     const newUser = new User({ email, username, passwordHash });
     await newUser.save();
-    return res.status(200);
+    return res.status(200).json("ok");
   } catch (e) {
     res.status(500).json({ error: "Error during registration." });
   }

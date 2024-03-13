@@ -12,8 +12,8 @@ import {
   FormControlLabel,
   FormLabel,
   Typography,
-  Alert,
 } from "@mui/material";
+import AlertDialog from "./AlertDialog";
 
 export default function NewFungus({ allFungi, updateFungi, handleLogout }) {
   const [variety, setVariety] = useState("");
@@ -23,12 +23,13 @@ export default function NewFungus({ allFungi, updateFungi, handleLogout }) {
   const [country, setCountry] = useState("");
   const [fileName, setFileName] = useState("");
   const [selectedFiles, setSelectedFiles] = useState([]);
+  const [openDialog, setOpenDialog] = useState(false);
   const navigate = useNavigate();
 
   const handleAddFungus = async (event) => {
     event.preventDefault();
     if (selectedFiles.length === 0) {
-      return <Alert severity="warning">This is a warning Alert.</Alert>;
+      return setOpenDialog(true);
     }
     try {
       const data = new FormData();
@@ -69,6 +70,11 @@ export default function NewFungus({ allFungi, updateFungi, handleLogout }) {
         paddingTop: 4,
       }}
     >
+      <AlertDialog
+        open={openDialog}
+        setOpen={setOpenDialog}
+        variant="attachImages"
+      />
       <Card
         sx={{
           backgroundColor: "rgb(255, 226, 216)",

@@ -17,7 +17,7 @@ export default function Review({
   const reviewId = review._id;
 
   const handleDelete = async () => {
-    const average = await reviews.deleteOne(id, reviewId); // TODO: fix "NotAuthor"
+    const average = await reviews.deleteOne(id, reviewId);
     console.log(average);
     if (average === "Forbidden" || average === "Unauthorized") {
       handleLogout();

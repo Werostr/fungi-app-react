@@ -3,28 +3,21 @@ import MessageParser from "../utils/MessageParser";
 import config from "../utils/config";
 import "react-chatbot-kit/build/main.css";
 import Chatbot from "react-chatbot-kit";
-import {
-  Box,
-  Button,
-  Fade,
-  FormControlLabel,
-  Tooltip,
-  Typography,
-} from "@mui/material";
-import { useState, useEffect } from "react";
+import { Box, Button, Fade, Tooltip, Typography } from "@mui/material";
+import { useState } from "react";
 import { ChatBubbleRounded, Close } from "@mui/icons-material";
 
 export default function ChatBot() {
   const [clicked, setClicked] = useState(false);
 
-  const saveMessages = (messages, HTMLString) => {
-    localStorage.setItem("chat_messages", JSON.stringify(messages));
-  };
+  // const saveMessages = (messages, HTMLString) => {
+  //   localStorage.setItem("chat_messages", JSON.stringify(messages));
+  // };
 
-  const loadMessages = () => {
-    const messages = JSON.parse(localStorage.getItem("chat_messages"));
-    return messages;
-  };
+  // const loadMessages = () => {
+  //   const messages = JSON.parse(localStorage.getItem("chat_messages"));
+  //   return messages;
+  // };
 
   return (
     <Box
@@ -45,8 +38,8 @@ export default function ChatBot() {
               config={config}
               actionProvider={ActionProvider}
               messageParser={MessageParser}
-              saveMessages={saveMessages}
-              messageHistory={loadMessages()}
+              // saveMessages={saveMessages}
+              // messageHistory={loadMessages()}
               headerText={
                 <Box
                   sx={{

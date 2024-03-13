@@ -80,6 +80,7 @@ function App() {
 
   const handleLogout = () => {
     window.localStorage.removeItem("user-token");
+    //window.localStorage.removeItem("chat_messages");
     setUser({});
     setToken(false);
     navigate("/login");

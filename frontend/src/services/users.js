@@ -21,6 +21,9 @@ const register = async (credentials) => {
     );
     return res.data;
   } catch (err) {
+    if (err.response.data) {
+      return err.response.data;
+    }
     console.log(err);
   }
 };
@@ -32,7 +35,6 @@ const getInfo = async () => {
     if (!token) {
       return {};
     }
-
     const res = await axios.get("http://localhost:9000/api/users", {
       headers: { Authorization: `Bearer ${token}` },
     });

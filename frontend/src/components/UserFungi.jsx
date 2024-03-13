@@ -1,14 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Masonry from "@mui/lab/Masonry";
-import {
-  Button,
-  CircularProgress,
-  Fade,
-  Typography,
-  Grid,
-  Box,
-} from "@mui/material";
+import { Fade, Typography, Grid, Box, Container } from "@mui/material";
 import HeartRating from "./HeartRating";
 
 export default function UserFungi({ user }) {
@@ -19,7 +12,7 @@ export default function UserFungi({ user }) {
   };
 
   return (
-    <Box
+    <Container
       sx={{
         padding: { xs: 2, sm: 4, md: 6, lg: 10 },
         display: "flex",
@@ -85,6 +78,6 @@ export default function UserFungi({ user }) {
           ))}
         </Masonry>
       </Grid>
-    </Box>
+    </Container>
   );
 }

@@ -15,10 +15,12 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import LooksIcon from "@mui/icons-material/Looks";
+import AlertDialog from "./AlertDialog";
 
 export default function Navbar({ logout, token }) {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
+  const [openDialog, setOpenDialog] = useState(false);
   const navigate = useNavigate();
 
   const handleOpenNavMenu = (event) => {
@@ -42,13 +44,26 @@ export default function Navbar({ logout, token }) {
     navigate("/");
   };
 
-  const handleShowFungi = () => {
+  const handleShowUserFungi = () => {
     setAnchorElUser(null);
     navigate("/user");
   };
 
+  const handleShowAllFungi = () => {
+    navigate(`/fungi`);
+  };
+
+  const handleShowCreateNew = () => {
+    token ? navigate(`/fungi/new`) : setOpenDialog(true);
+  };
+
   return (
     <AppBar sx={{ backgroundColor: "#ff6d75" }} position="sticky">
+      <AlertDialog
+        open={openDialog}
+        setOpen={setOpenDialog}
+        variant="createNew"
+      />
       <Container maxWidth="false">
         <Toolbar disableGutters>
           <LooksIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
@@ -102,7 +117,7 @@ export default function Navbar({ logout, token }) {
                 key="all"
                 onClick={() => {
                   handleCloseNavMenu();
-                  navigate(`/fungi`);
+                  handleShowAllFungi();
                 }}
               >
                 <Typography textAlign="center">All fungi</Typography>
@@ -111,7 +126,7 @@ export default function Navbar({ logout, token }) {
                 key="new"
                 onClick={() => {
                   handleCloseNavMenu();
-                  navigate(`/fungi/new`);
+                  handleShowCreateNew();
                 }}
               >
                 <Typography textAlign="center">Create new</Typography>
@@ -140,18 +155,14 @@ export default function Navbar({ logout, token }) {
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             <Button
               key="all"
-              onClick={() => {
-                navigate(`/fungi`);
-              }}
+              onClick={handleShowAllFungi}
               sx={{ my: 2, color: "white", display: "block" }}
             >
               All fungi
             </Button>
             <Button
               key="create"
-              onClick={() => {
-                navigate(`/fungi/new`);
-              }}
+              onClick={handleShowCreateNew}
               sx={{ my: 2, color: "white", display: "block" }}
             >
               Create new
@@ -180,7 +191,7 @@ export default function Navbar({ logout, token }) {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                <MenuItem key="fungi" onClick={handleShowFungi}>
+                <MenuItem key="fungi" onClick={handleShowUserFungi}>
                   <Typography textAlign="center">Your fungi</Typography>
                 </MenuItem>
                 <MenuItem key="logout" onClick={handleLogout}>
