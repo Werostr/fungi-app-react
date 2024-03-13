@@ -30,6 +30,8 @@ export default function LoginForm({ setToken }) {
       setError(true);
       console.log("Error during logging", error);
     }
+    setEmail("");
+    setPassword("");
   };
   return (
     <Container
